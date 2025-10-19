@@ -1,3 +1,6 @@
+from typing import List
+
+
 class BPE:
     """
     Byte-Pair Encoding (BPE) это метод сжатия текстовых данных, который приспособили для проведения токенизации.
@@ -75,3 +78,15 @@ class BPE:
                 encoded.append(self.token2id.get(tokens[i], 0))
                 i += 1
         return encoded
+
+    def decode(self, token_ids: List[int]):
+        """
+        Заменяет полученные идентификаторы токенов на их текстовые представления.
+        """
+        tokens = []
+        for token_id in token_ids:
+            if token_id in self.id2token:
+                tokens.append(self.id2token[token_id])
+            else:
+                tokens.append("")
+        return "".join(tokens)
