@@ -11,6 +11,9 @@ class BPE:
         self.token2id = {}
 
     def fit(self, text: str):
+        """
+        Обучает BPE словарь на корпусе текстовых данных.
+        """
         unique_tokens = sorted(set(text))
         base_tokens = list(text)
 
@@ -45,3 +48,30 @@ class BPE:
 
         self.id2token = {i: token for i, token in enumerate(unique_tokens[: self.vocab_size])}
         self.token2id = {token: i for i, token in self.id2token.items()}
+
+    def encode(self, text: str):
+        """
+        Кодирует текст с использованием построенного словаря BPE.
+        """
+        tokens = list(text)
+        bpe_tokens = sorted(self.token2id.keys(), key=lambda x: -len(x))
+
+        i = 0
+        encoded = []
+        while i < len(tokens):
+            match = None
+            match_len = 0
+            for token in bpe_tokens:
+                t_len = len(token)
+                if t_len <= (len(tokens) - i):
+                    if "".join(tokens[i : i + t_len]) == token:
+                        match = token
+                        match_len = t_len
+                        break
+            if match:
+                encoded.append(self.token2id[match])
+                i += match_len
+            else:
+                encoded.append(self.token2id.get(tokens[i], 0))
+                i += 1
+        return encoded
