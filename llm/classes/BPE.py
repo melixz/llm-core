@@ -1,4 +1,5 @@
 from typing import List
+import dill
 
 
 class BPE:
@@ -90,3 +91,22 @@ class BPE:
             else:
                 tokens.append("")
         return "".join(tokens)
+
+    def save(self, filename):
+        """
+        Сохраняет экземпляр класса BPE в файл с помощью dill.
+        """
+        with open(filename, "wb") as f:
+            dill.dump(self, f)
+        print(f"Объект сохранён в {filename}")
+
+    @classmethod
+    def load(cls, filename):
+        """
+        Загружает экземпляр класса BPE из файла с помощью dill.
+        """
+        with open(filename, "rb") as f:
+            obj = dill.load(f)
+
+        print(f"Объект загружен из {filename}")
+        return obj
